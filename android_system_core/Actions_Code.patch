@@ -1,11 +1,11 @@
 From 925e35a8c4cd05e28dc81db48d43ce21faa392bd Mon Sep 17 00:00:00 2001
-From: Alan Marchesan <justcavalli@gmail.com>
-Date: Thu, 3 Oct 2013 06:46:06 +0200
-Subject: [PATCH] gs702a: initial merge of Actions code by ChristianTroy
+From: Actions-Semi, Inc
+Date: Tue, 13 Aug 2013 10:16:28 +0800
+Subject: [PATCH] Initial merge of Actions code
 
 ---
- include/ion/ion.h            |   6 +-
- include/ion/linux/asoc_ion.h |  60 +++++++
+ include/ion/ion.h            |   7 +-
+ include/ion/linux/asoc_ion.h |  59 +++++++
  include/ion/linux/ion.h      | 418 +++++++++++++++++++++++++++++++++++++++++++
  include/system/graphics.h    |   3 +
  libion/ion.c                 |  42 ++++-
@@ -34,6 +34,7 @@ index 018c0a1..3532551 100644
 +int ion_phys(int fd, struct ion_handle *handle, unsigned long *phys);
 +int ion_cache(int fd, struct ion_handle *handle, int cmd, void *vaddr, unsigned int offset,
 +    unsigned int length);
++
  __END_DECLS
  
  #endif /* __SYS_CORE_ION_H */
@@ -46,8 +47,7 @@ index 0000000..dd62b98
 +/*
 + * include/linux/asoc_ion.h
 + *
-+ * Copyright 2012 Actions Semi Inc.
-+ * Author: Actions Semi, Inc.
++ * Copyright (C) 2012 Actions-Semi, Inc.
 + *
 + * This program is free software; you can redistribute  it and/or modify it
 + * under  the terms of  the GNU General  Public License as published by the

@@ -1,0 +1,42 @@
+From 925e35a8c4cd05e28dc81db48d43ce21faa392bd Mon Sep 17 00:00:00 2001
+From: Actions-Semi, Inc
+Date: Tue, 13 Aug 2013 10:16:28 +0800
+Subject: [PATCH] Initial merge of Actions code
+
+---
+ audio/AudioPolicyManagerBase.cpp |  12 +-
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/audio/AudioPolicyManagerBase.cpp b/audio/AudioPolicyManagerBase.cpp
+index 9c48d35..8de6d3d 100644
+--- a/audio/AudioPolicyManagerBase.cpp
++++ b/audio/AudioPolicyManagerBase.cpp
+@@ -2256,12 +2264,6 @@ audio_devices_t AudioPolicyManagerBase::getDeviceForStrategy(routing_strategy st
+             }
+         }
+         if (device2 == AUDIO_DEVICE_NONE) {
+-            device2 = mAvailableOutputDevices & AUDIO_DEVICE_OUT_WIRED_HEADPHONE;
+-        }
+-        if (device2 == AUDIO_DEVICE_NONE) {
+-            device2 = mAvailableOutputDevices & AUDIO_DEVICE_OUT_WIRED_HEADSET;
+-        }
+-        if (device2 == AUDIO_DEVICE_NONE) {
+             device2 = mAvailableOutputDevices & AUDIO_DEVICE_OUT_USB_ACCESSORY;
+         }
+         if (device2 == AUDIO_DEVICE_NONE) {
+@@ -2279,6 +2281,12 @@ audio_devices_t AudioPolicyManagerBase::getDeviceForStrategy(routing_strategy st
+             device2 = mAvailableOutputDevices & AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET;
+         }
+         if (device2 == AUDIO_DEVICE_NONE) {
++            device2 = mAvailableOutputDevices & AUDIO_DEVICE_OUT_WIRED_HEADPHONE;
++        }
++        if (device2 == AUDIO_DEVICE_NONE) {
++            device2 = mAvailableOutputDevices & AUDIO_DEVICE_OUT_WIRED_HEADSET;
++        }
++        if (device2 == AUDIO_DEVICE_NONE) {
+             device2 = mAvailableOutputDevices & AUDIO_DEVICE_OUT_SPEAKER;
+         }
+
+-- 
+1.8.1.5
+

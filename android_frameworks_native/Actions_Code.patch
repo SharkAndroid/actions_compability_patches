@@ -1,30 +1,27 @@
 From b81ea539a603d350f8cd8b1d96debaf456443a6e Mon Sep 17 00:00:00 2001
-From: Alan Marchesan <justcavalli@gmail.com>
-Date: Thu, 3 Oct 2013 06:43:36 +0200
-Subject: [PATCH] gs702a: initial merge of Actions code by ChristianTroy
+From: Actions-Semi, Inc
+Date: Tue, 13 Aug 2013 10:16:28 +0800
+Subject: [PATCH] Initial merge of Actions code
 
 ---
  include/media/openmax/ACT_OMX_Common_V1_2__V1_1.h  | 196 ++++++++
- include/media/openmax/ACT_OMX_IVCommon.h           | 525 +++++++++++++++++++++
- include/media/openmax/ACT_OMX_Index.h              |  61 +++
+ include/media/openmax/ACT_OMX_IVCommon.h           | 511 ++++++++++++++++++++
+ include/media/openmax/ACT_OMX_Index.h              |  60 +++
  include/media/openmax/OMX_Core.h                   |   2 +
  include/media/openmax/OMX_RoleNames.h              | 141 ++++++
- include/media/openmax/video_mediadata.h            |  40 ++
+ include/media/openmax/video_mediadata.h            |  39 ++
  include/ui/FramebufferNativeWindow.h               |   3 +
  libs/ui/FramebufferNativeWindow.cpp                |   7 +
- opengl/libs/EGL/eglApi.cpp                         |   2 +-
- services/surfaceflinger/Android.mk                 |   5 +-
- services/surfaceflinger/DisplayDevice.cpp          |   3 +-
  services/surfaceflinger/DisplayDevice.h            |   2 +
- .../surfaceflinger/DisplayHardware/HWComposer.cpp  | 179 ++++++-
+ .../surfaceflinger/DisplayHardware/HWComposer.cpp  | 178 ++++++-
  .../surfaceflinger/DisplayHardware/HWComposer.h    |   2 +
- services/surfaceflinger/Layer.cpp                  |  23 +-
+ services/surfaceflinger/Layer.cpp                  |   8 +-
  services/surfaceflinger/Layer.h                    |   1 +
  services/surfaceflinger/LayerDim.cpp               |  27 ++
  services/surfaceflinger/LayerDim.h                 |   4 +
  services/surfaceflinger/SurfaceFlinger.cpp         |  20 +-
  services/surfaceflinger/SurfaceFlinger.h           |   2 +
- 20 files changed, 1224 insertions(+), 21 deletions(-)
+ 17 files changed, 1187 insertions(+), 16 deletions(-)
  create mode 100755 include/media/openmax/ACT_OMX_Common_V1_2__V1_1.h
  create mode 100755 include/media/openmax/ACT_OMX_IVCommon.h
  create mode 100755 include/media/openmax/ACT_OMX_Index.h
@@ -252,7 +249,6 @@ index 0000000..80e9676
 +#include <OMX_IVCommon.h>
 +#include <OMX_Image.h>
 +
-+
 +/**
 + *processing level type
 + *  Simultaneously lock focus, white balance and exposure (and relevant other settings).
@@ -278,8 +274,6 @@ index 0000000..80e9676
 +		OMX_S32 nLevel;
 +		OMX_BOOL bAuto;
 +} OMX_IMAGE_CONFIG_PROCESSINGLEVELTYPE;
-+
-+
 +
 +/**
 + * Structure used to configure current OMX_ACT_CONFIG_SHAREDBUFFER
@@ -463,8 +457,6 @@ index 0000000..80e9676
 +	OMX_U16                 ulAreasFocusCount;    // supported number of AlgoAreas for focus areas
 + } OMX_ACT_CAPTYPE;
 +
-+
-+
 +/**
 + * Defines 3A Region priority mode.
 + *
@@ -485,7 +477,6 @@ index 0000000..80e9676
 +	OMX_BOOL bAfRegionEnable;
 +	OMX_CONFIG_RECTTYPE tRect;
 +} OMX_ACT_CONFIG_3A_REGION_PRIORITY;
-+
 +
 +/**
 + * The OMX_ACT_BRIGHTNESSCONTRASTCRTLTYPE enumeration is used to define the
@@ -513,7 +504,6 @@ index 0000000..80e9676
 +	OMX_U32 nPortIndex;
 +	OMX_ACT_BRIGHTNESSCONTRASTCRTLTYPE eControl;
 +} OMX_ACT_CONFIG_BLITCOMPENSATIONTYPE;
-+
 +
 +/**
 + * Focus distance configuration
@@ -627,7 +617,6 @@ index 0000000..80e9676
 +    omx_camera_face_t *faces;
 +} omx_camera_frame_metadata_t;
 +
-+
 +//*
 +typedef enum OMX_TSPACKET_TYPE {
 +	OMX_TsPacket_Disable,
@@ -659,20 +648,19 @@ index 0000000..80e9676
 +	OMX_COLOR_FORMATTYPE eColorFormat;
 +}OMX_ACT_BlendImageType;
 +
-+
 +typedef struct OMX_ACT_PARAM_EXIFPARAM{
 +	OMX_U32 nSize;
 +	OMX_VERSIONTYPE nVersion;
 +	OMX_U32 nPortIndex;
 +	OMX_BOOL bExifEnable;				
-+	OMX_U32 ImageOri;// 图像的方向，默认为0
-+	OMX_BOOL bGPS;// GPS 信息是否含有，-1表示无GPS信息
-+	char *dataTime;// 拍照日期
++	OMX_U32 ImageOri;
++	OMX_BOOL bGPS;// GPS
++	char *dataTime;
 +	char *exifmake;// make and model
 +	char *exifmodel;
-+	OMX_U32  focalLengthL;// 焦距
++	OMX_U32  focalLengthL;
 +	OMX_U32  focalLengthH;
-+	OMX_U32  gpsLATL[3];// 纬度与径度
++	OMX_U32  gpsLATL[3];
 +	OMX_U32  gpsLATH[3];
 +	OMX_U32  gpsLONGL[3];
 +	OMX_U32  gpsLONGH[3];
@@ -733,13 +721,11 @@ index 0000000..80e9676
 +	OMX_ExposureControlActHDR,
 +} OMX_ACT_EXPOSURECONTROLTYPE;
 +
-+
 +typedef enum OMX_ACT_IMAGE_FOCUSCONTROLTYPE {
 +    OMX_IMAGE_FocusControlSingle = 0x7F000001,
 +		OMX_IMAGE_FocusControlMacro,
 +		OMX_IMAGE_FocusControlFACE,
 +} OMX_ACT_IMAGE_FOCUSCONTROLTYPE;
-+
 +
 +typedef struct OMX_ACT_CONFIG_AGCVALUE {
 +    OMX_U32 nSize;
@@ -756,14 +742,11 @@ index 0000000..80e9676
 +    OMX_U32  nElapsedTime;
 +} OMX_ACT_CONFIG_FlashStrobeParams;
 +
-+
 +#ifdef __cplusplus
 +}
 +#endif /* __cplusplus */
 +
 +#endif
-+
-+
 diff --git a/include/media/openmax/ACT_OMX_Index.h b/include/media/openmax/ACT_OMX_Index.h
 new file mode 100755
 index 0000000..24c716f
@@ -830,7 +813,6 @@ index 0000000..24c716f
 +#endif /* __cplusplus */
 +
 +#endif /* _OMX_ACT_INDEX_H_ */
-+
 diff --git a/include/media/openmax/OMX_Core.h b/include/media/openmax/OMX_Core.h
 index 9fb0f6f..d6e2772 100644
 --- a/include/media/openmax/OMX_Core.h
@@ -1036,7 +1018,6 @@ index 0000000..4429b79
 +	int ion_handle_t;//unuse here
 +}video_handle_t;
 +#endif
-+
 diff --git a/include/ui/FramebufferNativeWindow.h b/include/ui/FramebufferNativeWindow.h
 index 02f3c8b..7597105 100644
 --- a/include/ui/FramebufferNativeWindow.h
@@ -1069,56 +1050,6 @@ index 7ff6618..6159f1b 100644
  FramebufferNativeWindow::FramebufferNativeWindow() 
      : BASE(), fbDev(0), grDev(0), mUpdateOnDemand(false)
  {
-diff --git a/opengl/libs/EGL/eglApi.cpp b/opengl/libs/EGL/eglApi.cpp
-index ed1b472..a7a9a39 100644
---- a/opengl/libs/EGL/eglApi.cpp
-+++ b/opengl/libs/EGL/eglApi.cpp
-@@ -295,7 +295,7 @@ EGLSurface eglCreateWindowSurface(  EGLDisplay dpy, EGLConfig config,
-         if (native_window_api_connect(window, NATIVE_WINDOW_API_EGL) != OK) {
-             ALOGE("EGLNativeWindowType %p already connected to another API",
-                     window);
--            return setError(EGL_BAD_NATIVE_WINDOW, EGL_NO_SURFACE);
-+            return setError(EGL_BAD_ALLOC, EGL_NO_SURFACE);
-         }
- 
-         // set the native window's buffers format to match this config
-diff --git a/services/surfaceflinger/Android.mk b/services/surfaceflinger/Android.mk
-index b3fa5fb..31c877e 100644
---- a/services/surfaceflinger/Android.mk
-+++ b/services/surfaceflinger/Android.mk
-@@ -52,7 +52,8 @@ LOCAL_SHARED_LIBRARIES := \
- 	libGLESv1_CM \
- 	libbinder \
- 	libui \
--	libgui
-+	libgui \
-+        libsync
- 
- ifeq ($(BOARD_USES_SAMSUNG_HDMI),true)
-         LOCAL_CFLAGS += -DSAMSUNG_HDMI_SUPPORT
-@@ -61,6 +62,8 @@ ifeq ($(BOARD_USES_SAMSUNG_HDMI),true)
-         LOCAL_C_INCLUDES += hardware/samsung/$(TARGET_BOARD_PLATFORM)/include
- endif
- 
-+LOCAL_C_INCLUDES += $(TOP)/device/actions/gs702a/include
-+
- 
- LOCAL_MODULE:= libsurfaceflinger
- 
-diff --git a/services/surfaceflinger/DisplayDevice.cpp b/services/surfaceflinger/DisplayDevice.cpp
-index a6b51a9..b6b6ad1 100644
---- a/services/surfaceflinger/DisplayDevice.cpp
-+++ b/services/surfaceflinger/DisplayDevice.cpp
-@@ -226,7 +226,8 @@ void DisplayDevice::swapBuffers(HWComposer& hwc) const {
-         // TODO: HWC 1.2 will allow virtual displays
-         if (mType >= DisplayDevice::DISPLAY_VIRTUAL) {
-             // always call eglSwapBuffers() for virtual displays
--            success = eglSwapBuffers(mDisplay, mSurface);
-+            // for virtual displays, we swap buffer later
-+            //success = eglSwapBuffers(mDisplay, mSurface);
-         } else if (hwc.supportsFramebufferTarget()) {
-             // as of hwc 1.1 we always call eglSwapBuffers if we have some
-             // GLES layers
 diff --git a/services/surfaceflinger/DisplayDevice.h b/services/surfaceflinger/DisplayDevice.h
 index d6da422..70999e5 100644
 --- a/services/surfaceflinger/DisplayDevice.h
@@ -1161,7 +1092,6 @@ index 9b4f2ab..78b95d9 100644
  
          // don't need a vsync thread if we have a hardware composer
 -        needVSyncThread = false;
-+        // ATM7029 requires a vsync thread
 +        needVSyncThread = true;
          // always turn vsync off when we start
          if (hwcHasVsyncEvent(mHwc)) {
@@ -1191,9 +1121,7 @@ index 9b4f2ab..78b95d9 100644
 +          }
 +        err = setFramebufferTarget(id, acquireFence, buffer);
      } else {
-         if (acquireFence != NULL) {
-             acquireFence->waitForever(1000, "HWComposer::fbPost");
-         }
+         acquireFence->waitForever("HWComposer::fbPost");
 -        return mFbDev->post(mFbDev, buffer->handle);
 -    }
 +        if(mHwc && mHwc->fbPrePost){
@@ -1328,8 +1256,8 @@ index 9b4f2ab..78b95d9 100644
  
  int HWComposer::fbCompositionComplete() {
 @@ -1005,9 +1150,19 @@ public:
-             getLayer()->flags &= ~HWC_SKIP_LAYER;
-         }
+     virtual void setAnimating(bool animating) {
+         // Not bothering for legacy path
      }
 +    virtual void setLayerFlags(int flags , bool enable) {
 +        if(enable){
@@ -1348,7 +1276,7 @@ index 9b4f2ab..78b95d9 100644
          getLayer()->transform = transform;
      }
 @@ -1093,9 +1248,19 @@ public:
-             getLayer()->flags &= ~HWC_SKIP_LAYER;
+             getLayer()->flags &= ~HWC_SCREENSHOT_ANIMATOR_LAYER;
          }
      }
 +    virtual void setLayerFlags(int flags , bool enable) {
@@ -1372,9 +1300,9 @@ index 7c67407..ce58c30 100644
 --- a/services/surfaceflinger/DisplayHardware/HWComposer.h
 +++ b/services/surfaceflinger/DisplayHardware/HWComposer.h
 @@ -144,7 +144,9 @@ public:
-         virtual void setPerFrameDefaultState() = 0;
          virtual void setDefaultState() = 0;
          virtual void setSkip(bool skip) = 0;
+         virtual void setAnimating(bool animating) = 0;
 +        virtual void setLayerFlags(int flags, bool enable) = 0;
          virtual void setBlending(uint32_t blending) = 0;
 +        virtual void setAlpha(uint32_t alpha) = 0;
@@ -1391,50 +1319,27 @@ index c1561b2..70bd8db 100644
          mSecure(false),
 -        mProtectedByApp(false)
 +        mProtectedByApp(false),
-+        mLayerFlags(0)
++        mLayerFlags(0),
+         mHasSurface(false),
+         mClientRef(client)
  {
-     mCurrentCrop.makeInvalid();
-     glGenTextures(1, &mTextureName);
-@@ -135,6 +136,14 @@ void Layer::onRemoved()
- void Layer::setName(const String8& name) {
-     LayerBase::setName(name);
-     mSurfaceTexture->setName(name);
-+  
-+    if(strcmp(getName().string(),"com.android.gallery3d/com.android.camera.CameraLauncher") == 0){
-+	  	 mLayerFlags = 0x10000;
-+	  }else if(strcmp(getName().string(),"com.android.browser/com.android.browser.BrowserActivity") == 0){
-+	  	 mLayerFlags = 0x20000;
-+	  }else if (strcmp(getName().string(),"SurfaceView") == 0){	  	    	
-+	  	 mLayerFlags = 0x40000;
-+	  } 
- }
- 
- sp<ISurface> Layer::createSurface()
 @@ -266,10 +275,14 @@ void Layer::setGeometry(
-     // enable this layer
-     layer.setSkip(false);
+         layer.setSkip(true);
+     }
  
--    // we can't do alpha-fade with the hwc HAL
-+    // hwc HAL should determine if it will do alpha-fade
+     // this gives us only the "orientation" component of the transform
      const State& s(drawingState());
 +    layer.setAlpha(s.alpha);
 +
-     if (s.alpha < 0xFF) {
--        layer.setSkip(true);
-+        layer.setBlending(mPremultipliedAlpha ?
-+                HWC_BLENDING_PREMULT :
-+                HWC_BLENDING_COVERAGE);
-     }
- 
-     if (isSecure() && !hw->isSecure()) {
+     if (!isOpaque() || s.alpha != 0xFF) {
+         layer.setBlending(mPremultipliedAlpha ?
 @@ -304,7 +317,9 @@ void Layer::setPerFrameData(const sp<const DisplayDevice>& hw,
      LayerBaseClient::setPerFrameData(hw, layer);
      // NOTE: buffer can be NULL if the client never drew into this
      // layer yet, or if we ran out of memory
 -    layer.setBuffer(mActiveBuffer);
 +    layer.setBuffer(mActiveBuffer);    
-+    layer.setLayerFlags(mLayerFlags,true);
-+    
++    layer.setLayerFlags(mLayerFlags,true);    
  }
  
  void Layer::setAcquireFence(const sp<const DisplayDevice>& hw,
@@ -1447,15 +1352,14 @@ index a3d6ab9..fb7fd92 100644
      bool mSecure;         // no screenshots
      bool mProtectedByApp; // application requires protected path to external sink
 +    int  mLayerFlags;
- };
- 
- // ---------------------------------------------------------------------------
+
+     // protected by mLock
 diff --git a/services/surfaceflinger/LayerDim.cpp b/services/surfaceflinger/LayerDim.cpp
 index 25caa0a..3ba6b49 100644
 --- a/services/surfaceflinger/LayerDim.cpp
 +++ b/services/surfaceflinger/LayerDim.cpp
 @@ -71,6 +71,33 @@ void LayerDim::onDraw(const sp<const DisplayDevice>& hw, const Region& clip) con
-     }
+     return !(s.flags & layer_state_t::eLayerHidden) && s.alpha;
  }
  
 +void LayerDim::setGeometry(
@@ -1500,17 +1404,17 @@ index 06f312d..07daa7e 100644
 +            HWComposer::HWCLayerInterface& layer);
 +    virtual void setPerFrameData(const sp<const DisplayDevice>& hw,
 +            HWComposer::HWCLayerInterface& layer);
- };
- 
- // ---------------------------------------------------------------------------
+     
+     virtual bool isFixedSize() const      { return true; }
+     virtual bool isVisible() const;
 diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
 index f31bae4..d15575f 100644
 --- a/services/surfaceflinger/SurfaceFlinger.cpp
 +++ b/services/surfaceflinger/SurfaceFlinger.cpp
 @@ -1224,6 +1224,10 @@ void SurfaceFlinger::handleTransactionLocked(uint32_t transactionFlags)
                          sp<DisplayDevice> hw = new DisplayDevice(this,
-                                 state.type, isSecure, display, stc, fbs,
-                                 mEGLConfig);
+                                 state.type, hwcDisplayId, state.isSecure,
+                                 display, dispSurface, mEGLConfig);
 +                        if (fbs == NULL) {
 +                            sp<ANativeWindow> native = stc;
 +                            native_window_set_buffers_format(native.get(), PIXEL_FORMAT_BGRA_8888);
@@ -1524,7 +1428,7 @@ index f31bae4..d15575f 100644
      } else {
 -        // we're not using h/w composer
 -        for (size_t i=0 ; i<count ; ++i) {
--            const sp<LayerBase>& layer(layers[i]);
+-            const sp<Layer>& layer(layers[i]);
 -            const Region clip(dirty.intersect(
 -                    tr.transform(layer->visibleRegion)));
 -            if (!clip.isEmpty()) {
@@ -1532,7 +1436,7 @@ index f31bae4..d15575f 100644
 +        if(hwc.initCheck() || hw->getDisplayType() < DisplayDevice::DISPLAY_VIRTUAL) {
 +            // we're not using h/w composer
 +            for (size_t i=0 ; i<count ; ++i) {
-+                const sp<LayerBase>& layer(layers[i]);
++                const sp<Layer>& layer(layers[i]);
 +                const Region clip(dirty.intersect(
 +                                tr.transform(layer->visibleRegion)));
 +                if (!clip.isEmpty()) {
@@ -1548,7 +1452,7 @@ index 050d10f..b815333 100644
 @@ -137,6 +137,8 @@ public:
      // for debugging only
      // TODO: this should be made accessible only to HWComposer
-     const Vector< sp<LayerBase> >& getLayerSortedByZForHwcDisplay(int disp);
+     const Vector< sp<Layer> >& getLayerSortedByZForHwcDisplay(int id);
 +    
 +    const DefaultKeyedVector< wp<IBinder>, sp<DisplayDevice> > & getDisplays() { return mDisplays; }
  
