@@ -1,18 +1,3 @@
-From 925e35a8c4cd05e28dc81db48d43ce21faa392bd Mon Sep 17 00:00:00 2001
-From: Actions-Semi, Inc
-Date: Tue, 13 Aug 2013 10:16:28 +0800
-Subject: [PATCH] Initial merge of Actions code
-
----
- include/ion/ion.h            |   7 +-
- include/ion/linux/asoc_ion.h |  59 +++++++
- include/ion/linux/ion.h      | 418 +++++++++++++++++++++++++++++++++++++++++++
- include/system/graphics.h    |   3 +
- libion/ion.c                 |  42 ++++-
- 5 files changed, 526 insertions(+), 3 deletions(-)
- create mode 100755 include/ion/linux/asoc_ion.h
- create mode 100755 include/ion/linux/ion.h
-
 diff --git a/include/ion/ion.h b/include/ion/ion.h
 index 018c0a1..3532551 100644
 --- a/include/ion/ion.h
@@ -47,7 +32,8 @@ index 0000000..dd62b98
 +/*
 + * include/linux/asoc_ion.h
 + *
-+ * Copyright (C) 2012 Actions-Semi, Inc.
++ * Copyright (C) 2012 Actions-Semi,Inc.
++ * Author: Actions-Semi, Inc.
 + *
 + * This program is free software; you can redistribute  it and/or modify it
 + * under  the terms of  the GNU General  Public License as published by the
@@ -536,7 +522,7 @@ index 82b5fcc..7f0003d 100644
       */
  
 +    #define HAL_PIXEL_FORMAT_ACT_YU12         0x102  // YCbCr 4:2:0 Planar
-+    #define HAL_PIXEL_FORMAT_ACT_NV12         0x101 // NV12
++    #define HAL_PIXEL_FORMAT_ACT_NV12         0x101  // NV12
 +
      /*
       * Android YUV format:
@@ -598,6 +584,3 @@ index 4cd1697..ff4d28d 100644
 +
 +        return ret;
 +}
--- 
-1.8.1.5
-
