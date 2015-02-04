@@ -19,7 +19,6 @@ index 018c0a1..3532551 100644
 +int ion_phys(int fd, struct ion_handle *handle, unsigned long *phys);
 +int ion_cache(int fd, struct ion_handle *handle, int cmd, void *vaddr, unsigned int offset,
 +    unsigned int length);
-+
  __END_DECLS
  
  #endif /* __SYS_CORE_ION_H */

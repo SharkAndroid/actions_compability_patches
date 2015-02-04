@@ -2,8 +2,8 @@ diff --git a/media/java/android/media/MediaFile.java b/media/java/android/media/
 index 95c9ad4..3a6a66d 100644
 --- a/media/java/android/media/MediaFile.java
 +++ b/media/java/android/media/MediaFile.java
-@@ -59,8 +59,14 @@ public class MediaFile {
- 
+@@ -63,9 +63,14 @@
+     public static final int FILE_TYPE_EC3   = 305;
      public static final int FILE_TYPE_APE   = 306;
      public static final int FILE_TYPE_WEBMA = 307;
 +    public static final int FILE_TYPE_RM    = 308;
@@ -11,30 +11,28 @@ index 95c9ad4..3a6a66d 100644
 +    public static final int FILE_TYPE_AIFF  = 310;
 +    public static final int FILE_TYPE_MPC   = 311;
 +    public static final int FILE_TYPE_ALAC  = 312;
-+    public static final int FILE_TYPE_APE   = 313;
-     
+ 
      private static final int FIRST_AUDIO_FILE_TYPE2 = FILE_TYPE_DTS;
 -    private static final int LAST_AUDIO_FILE_TYPE2 = FILE_TYPE_WEBMA;
-+    private static final int LAST_AUDIO_FILE_TYPE_EXT = FILE_TYPE_APE;
++    private static final int LAST_AUDIO_FILE_TYPE2 = FILE_TYPE_APE;
  
      // MIDI file types
      public static final int FILE_TYPE_MID     = 11;
-@@ -86,8 +92,12 @@ public class MediaFile {
- 
+@@ -94,9 +99,12 @@
+     public static final int FILE_TYPE_FLV     = 202;
      public static final int FILE_TYPE_RV      = 203;
      public static final int FILE_TYPE_VC1     = 204;
-+    public static final int FILE_TYPE_FLV     = 205;
-+    public static final int FILE_TYPE_MPG     = 206;
-+    public static final int FILE_TYPE_OGM     = 207;    
-+    public static final int FILE_TYPE_RMVB    = 208;
-     
++    public static final int FILE_TYPE_MPG     = 205;
++    public static final int FILE_TYPE_OGM     = 206;    
++    public static final int FILE_TYPE_RMVB    = 207;
+ 
      private static final int FIRST_VIDEO_FILE_TYPE2 = FILE_TYPE_MP2PS;
 -    private static final int LAST_VIDEO_FILE_TYPE2 = FILE_TYPE_VC1;
 +    private static final int LAST_VIDEO_FILE_TYPE2 = FILE_TYPE_RMVB;
  
      // Image file types
      public static final int FILE_TYPE_JPEG    = 31;
-@@ -96,8 +106,9 @@ public class MediaFile {
+@@ -105,8 +113,9 @@
      public static final int FILE_TYPE_BMP     = 34;
      public static final int FILE_TYPE_WBMP    = 35;
      public static final int FILE_TYPE_WEBP    = 36;
@@ -42,10 +40,10 @@ index 95c9ad4..3a6a66d 100644
      private static final int FIRST_IMAGE_FILE_TYPE = FILE_TYPE_JPEG;
 -    private static final int LAST_IMAGE_FILE_TYPE = FILE_TYPE_WEBP;
 +    private static final int LAST_IMAGE_FILE_TYPE = FILE_TYPE_TIFF;
- 
+    
      // Playlist file types
      public static final int FILE_TYPE_M3U      = 41;
-@@ -185,7 +196,8 @@ public class MediaFile {
+@@ -195,7 +204,8 @@
  
      static {
          addFileType("MP3", FILE_TYPE_MP3, "audio/mpeg", MtpConstants.FORMAT_MP3);
@@ -55,10 +53,10 @@ index 95c9ad4..3a6a66d 100644
          addFileType("M4A", FILE_TYPE_M4A, "audio/mp4", MtpConstants.FORMAT_MPEG);
          addFileType("WAV", FILE_TYPE_WAV, "audio/x-wav", MtpConstants.FORMAT_WAV);
          addFileType("WAV", FILE_TYPE_PCM, "audio/wav");
-@@ -204,6 +216,31 @@ public class MediaFile {
+@@ -215,6 +225,25 @@
          addFileType("AC3", FILE_TYPE_AC3, "audio/ac3");
          addFileType("APE", FILE_TYPE_APE, "audio/x-ape");
- 
+  
 +        addFileType("RM", FILE_TYPE_RM, "audio/x-pn-realaudio");
 +        addFileType("RAM", FILE_TYPE_RM, "audio/x-pn-realaudio");
 +        addFileType("DTS", FILE_TYPE_DTS, "audio/x-dts");
@@ -66,18 +64,12 @@ index 95c9ad4..3a6a66d 100644
 +        addFileType("AA", FILE_TYPE_AA, "audio/audible");
 +        addFileType("AAX", FILE_TYPE_AA, "audio/audible");
 +        addFileType("FLAC", FILE_TYPE_FLAC, "audio/x-flac");
-+        addFileType("APE", FILE_TYPE_APE, "audio/x-ape");  
 +        addFileType("DTS", FILE_TYPE_DTS, "audio/DTS");
-+        addFileType("AC3", FILE_TYPE_AC3, "audio/AC3");
 +        addFileType("MP3", FILE_TYPE_MP3, "audio/MP3");
-+        addFileType("AAC", FILE_TYPE_AAC, "audio/AAC");
-+        addFileType("AMR", FILE_TYPE_AMR, "audio/AMR");
 +        addFileType("WMA", FILE_TYPE_WMA, "audio/WMASTD");
 +        addFileType("WMA", FILE_TYPE_WMA, "audio/WMALSL");
 +        addFileType("WMA", FILE_TYPE_WMA, "audio/WMAPRO");
-+        addFileType("OGG", FILE_TYPE_OGG, "audio/OGG");
 +        addFileType("APE", FILE_TYPE_APE, "audio/APE");
-+        addFileType("FLAC", FILE_TYPE_FLAC, "audio/FLAC");
 +        addFileType("RM", FILE_TYPE_RM, "audio/COOK");
 +        addFileType("RA", FILE_TYPE_RM, "audio/COOK");
 +        addFileType("PCM", FILE_TYPE_PCM, "audio/PCM");
@@ -87,15 +79,7 @@ index 95c9ad4..3a6a66d 100644
          addFileType("MID", FILE_TYPE_MID, "audio/midi");
          addFileType("MIDI", FILE_TYPE_MID, "audio/midi");
          addFileType("XMF", FILE_TYPE_MID, "audio/midi");
-@@ -218,6 +255,7 @@ public class MediaFile {
-         addFileType("MPG", FILE_TYPE_MP4, "video/mpeg", MtpConstants.FORMAT_MPEG);
-         addFileType("MP4", FILE_TYPE_MP4, "video/mp4", MtpConstants.FORMAT_MPEG);
-         addFileType("M4V", FILE_TYPE_M4V, "video/mp4", MtpConstants.FORMAT_MPEG);
-+        addFileType("MOV", FILE_TYPE_M4V, "video/mp4", MtpConstants.FORMAT_MPEG);
-         addFileType("MOV", FILE_TYPE_MP4, "video/quicktime", MtpConstants.FORMAT_MPEG);
-         addFileType("3GP", FILE_TYPE_3GPP, "video/3gpp",  MtpConstants.FORMAT_3GP_CONTAINER);
-         addFileType("3GPP", FILE_TYPE_3GPP, "video/3gpp", MtpConstants.FORMAT_3GP_CONTAINER);
-@@ -229,8 +267,32 @@ public class MediaFile {
+@@ -245,8 +274,32 @@
          addFileType("RMVB", FILE_TYPE_RV, "video/vnd.rn-realvideo");
          addFileType("VC1", FILE_TYPE_VC1, "video/vc1");
  
@@ -128,7 +112,7 @@ index 95c9ad4..3a6a66d 100644
              addFileType("ASF", FILE_TYPE_ASF, "video/x-ms-asf");
          }
  
-@@ -239,6 +301,8 @@ public class MediaFile {
+@@ -255,6 +308,8 @@
          addFileType("GIF", FILE_TYPE_GIF, "image/gif", MtpConstants.FORMAT_GIF);
          addFileType("PNG", FILE_TYPE_PNG, "image/png", MtpConstants.FORMAT_PNG);
          addFileType("BMP", FILE_TYPE_BMP, "image/x-ms-bmp", MtpConstants.FORMAT_BMP);
@@ -136,24 +120,13 @@ index 95c9ad4..3a6a66d 100644
 +        addFileType("TIF", FILE_TYPE_TIFF, "image/tif");
          addFileType("WBMP", FILE_TYPE_WBMP, "image/vnd.wap.wbmp");
          addFileType("WEBP", FILE_TYPE_WEBP, "image/webp");
- 
-diff --git a/media/jni/Android.mk b/media/jni/Android.mk
-index 6294704..6f2f683 100644
---- a/media/jni/Android.mk
-+++ b/media/jni/Android.mk
-@@ -44,6 +45,10 @@ LOCAL_STATIC_LIBRARIES := \
-     libstagefright_amrnbenc
- 
- LOCAL_C_INCLUDES += \
-+    $(TOP)/system/core/include/ion \
-     external/libexif/ \
-     external/tremor/Tremor \
-     frameworks/base/core/jni \
+
 diff --git a/services/java/com/android/server/SystemServer.java b/services/java/com/android/server/SystemServer.java
 index 1b2b65d..80e8e39 100644
 --- a/services/java/com/android/server/SystemServer.java
 +++ b/services/java/com/android/server/SystemServer.java
-@@ -80,6 +80,26 @@ import dalvik.system.PathClassLoader;
+@@ -94,6 +94,25 @@
+ import dalvik.system.PathClassLoader;
  import java.lang.reflect.Constructor;
  
 +import android.os.IBinder;
@@ -178,11 +151,11 @@ index 1b2b65d..80e8e39 100644
  class ServerThread {
      private static final String TAG = "SystemServer";
      private static final String ENCRYPTING_STATE = "trigger_restart_min_framework";
-@@ -780,6 +800,14 @@ class ServerThread extends Thread {
+@@ -844,6 +863,14 @@
                  reportWtf("starting SamplingProfiler Service", e);
              }
  
-+             try {
++            try {
 +                Slog.i(TAG, "DisplayManager Service");
 +                IBinder b=ActionServiceManager.getDisplayManagerService(context);
 +                               ServiceManager.addService("actions.display",b);
@@ -192,4 +165,4 @@ index 1b2b65d..80e8e39 100644
 +
              if (!disableNetwork) {
                  try {
-                 Slog.i(TAG, "NetworkTimeUpdateService");
+                     Slog.i(TAG, "NetworkTimeUpdateService");
